@@ -47,34 +47,23 @@ output_directory = os.getcwd() + "/" + opts['-o']
 if not os.path.exists(output_directory):
     os.makedirs(output_directory)
 
-file_size_list = []
-
 with open(opts['-s']) as scp_file:
     for index, line in enumerate(scp_file):
         scp = line.split()
         output_file = output_directory + "/{0:06d}".format(index) + ".wav"
         subprocess.run([scp[1], scp[2], scp[3], scp[4], output_file])
-        file_size_list.append(os.path.getsize(output_file))
-
-train_file_count = int(0.8 * len(file_size_list))
 
 head = "wav_filename,wav_filesize,transcript\n"
 punctuations = r"""!"#$%&()*+,-./:;<=>?@[\]^_`{|}~"""
 
 train_csv = open(opts['-o'] + "-train.csv", "w+")
-dev_csv = open(opts['-o'] + "-dev.csv", "w+")
-
 train_csv.write(head)
-dev_csv.write(head)
 
 brackets = re.compile(r'<.+>')
 punctuation = re.compile('[%s]' % re.escape(punctuations))
 
 with open(opts['-t']) as text_file:
     for index, line in enumerate(text_file):
-
-        if file_size_list[index] < 100000:
-            continue
 
         text = line[8:].lower()
 
@@ -103,11 +92,16 @@ with open(opts['-t']) as text_file:
         text = text.strip()
 
         wav_file = output_directory + "/{0:06d}".format(index) + ".wav"
-        text = wav_file + "," + str(file_size_list[index]) + "," + text + "\n"
-        if index < train_file_count:
-            train_csv.write(text)
-        else:
-            dev_csv.write(text)
+        frames = int(subprocess.check_output(['soxi', '-s', wav_file], stderr=subprocess.STDOUT))
+
+        if len(text) < 4:
+            continue
+        if frames / 16000 > 10:
+            continue
+        if int(frames / 16000 * 1000 / 10 / 2) < len(text):
+            continue
+
+        text = wav_file + "," + str(os.path.getsize(wav_file)) + "," + text + "\n"
+        train_csv.write(text)
 
 train_csv.close()
-dev_csv.close()
