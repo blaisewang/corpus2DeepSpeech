@@ -8,8 +8,10 @@ OPTIONS:
 """
 
 import getopt
-import sys
+import os
+import re
 import subprocess
+import sys
 
 opts, args = getopt.getopt(sys.argv[1:], 'hs:t:o:')
 opts = dict(opts)
@@ -40,9 +42,72 @@ if '-o' not in opts:
     print("\n** ERROR: must specify output file prefix (opt: -o) **\n", file=sys.stderr)
     print_help()
 
+output_directory = os.getcwd() + "/" + opts['-o']
+
+if not os.path.exists(output_directory):
+    os.makedirs(output_directory)
+
+file_size_list = []
+
 with open(opts['-s']) as scp_file:
     for index, line in enumerate(scp_file):
-        split = line.split
-        output_file = opts['-o'] + "/{0:08d}".format(index) + ".wav"
-        subprocess.run([split[1], split[2], split[3], split[4], output_file])
-        break
+        scp = line.split()
+        output_file = output_directory + "/{0:06d}".format(index) + ".wav"
+        subprocess.run([scp[1], scp[2], scp[3], scp[4], output_file])
+        file_size_list.append(os.path.getsize(output_file))
+
+train_file_count = int(0.8 * len(file_size_list))
+
+head = "wav_filename,wav_filesize,transcript\n"
+punctuations = r"""!"#$%&()*+,-./:;<=>?@[\]^_`{|}~"""
+
+train_csv = open(opts['-o'] + "-train.csv", "w+")
+dev_csv = open(opts['-o'] + "-dev.csv", "w+")
+
+train_csv.write(head)
+dev_csv.write(head)
+
+brackets = re.compile(r'<.+>')
+punctuation = re.compile('[%s]' % re.escape(punctuations))
+
+with open(opts['-t']) as text_file:
+    for index, line in enumerate(text_file):
+
+        if file_size_list[index] < 100000:
+            continue
+
+        text = line[8:].lower()
+
+        text = text.replace("-DASH", "")
+        text = text.replace(",COMMA", "")
+        text = text.replace(":COLON", "")
+        text = text.replace("-HYPHEN", "")
+        text = text.replace(".PERIOD", "")
+        text = text.replace(";SEMI-COLON", "")
+        text = text.replace("(PAREN", "")
+        text = text.replace(")CLOSE_PAREN", "")
+        text = text.replace("(LEFT-PAREN", "")
+        text = text.replace(")RIGHT-PAREN", "")
+        text = text.replace("{LEFT-BRACE", "")
+        text = text.replace("}RIGHT-BRACE", "")
+        text = text.replace("\'SINGLE-QUOTE", "")
+        text = text.replace("\"DOUBLE-QUOTE", "")
+        text = text.replace("?QUESTION-MARK", "")
+        text = text.replace("!EXCLAMATION-POINT", "")
+
+        text = text.replace("&AMPERSAND", "and")
+
+        text = brackets.sub('', text)
+        text = punctuation.sub('', text)
+        text = text.replace("  ", " ")
+        text = text.strip()
+
+        wav_file = output_directory + "/{0:06d}".format(index) + ".wav"
+        text = wav_file + "," + str(index) + "," + text + "\n"
+        if index < train_file_count:
+            train_csv.write(text)
+        else:
+            dev_csv.write(text)
+
+train_csv.close()
+dev_csv.close()
