@@ -9,6 +9,7 @@ OPTIONS:
 
 import getopt
 import sys
+import subprocess
 
 opts, args = getopt.getopt(sys.argv[1:], 'hs:t:o:')
 opts = dict(opts)
@@ -41,5 +42,7 @@ if '-o' not in opts:
 
 with open(opts['-s']) as scp_file:
     for index, line in enumerate(scp_file):
-        print(index)
+        split = line.split
+        output_file = opts['-o'] + "/{0:08d}".format(index) + ".wav"
+        subprocess.run([split[1], split[2], split[3], split[4], output_file])
         break
