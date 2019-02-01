@@ -103,7 +103,7 @@ with open(opts['-t']) as text_file:
         text = text.strip()
 
         wav_file = output_directory + "/{0:06d}".format(index) + ".wav"
-        text = wav_file + "," + str(index) + "," + text + "\n"
+        text = wav_file + "," + str(file_size_list[index]) + "," + text + "\n"
         if index < train_file_count:
             train_csv.write(text)
         else:
