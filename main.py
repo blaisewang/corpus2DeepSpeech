@@ -65,7 +65,7 @@ punctuation = re.compile('[%s]' % re.escape(punctuations))
 with open(opts['-t']) as text_file:
     for index, line in enumerate(text_file):
 
-        text = line[8:].lower()
+        text = line[8:]
 
         text = text.replace("-DASH", "")
         text = text.replace(",COMMA", "")
@@ -85,6 +85,8 @@ with open(opts['-t']) as text_file:
         text = text.replace("!EXCLAMATION-POINT", "")
 
         text = text.replace("&AMPERSAND", "and")
+
+        text = text.lower()
 
         text = brackets.sub('', text)
         text = punctuation.sub('', text)
