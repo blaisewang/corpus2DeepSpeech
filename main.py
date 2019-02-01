@@ -45,4 +45,5 @@ if '-o' not in opts:
 
 with open(opts['-s']) as scp_file:
     for line in scp_file:
-        print(line)
+        print(line.split())
+        break
