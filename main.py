@@ -6,13 +6,9 @@ OPTIONS:
     -t : text filepath
     -o : output file prefix
 """
-################################################################
 
 import getopt
 import sys
-
-################################################################
-# Command line options handling, and help
 
 opts, args = getopt.getopt(sys.argv[1:], 'hs:t:o:')
 opts = dict(opts)
@@ -44,6 +40,6 @@ if '-o' not in opts:
     print_help()
 
 with open(opts['-s']) as scp_file:
-    for line in scp_file:
-        print(line.split())
+    for index, line in enumerate(scp_file):
+        print(index)
         break
