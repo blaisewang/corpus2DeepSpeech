@@ -38,11 +38,7 @@ if '-t' not in opts:
     print("\n** ERROR: must specify text filepath (opt: -t) **\n", file=sys.stderr)
     print_help()
 
-if '-o' not in opts:
-    print("\n** ERROR: must specify output file prefix (opt: -o) **\n", file=sys.stderr)
-    print_help()
-
-output_directory = os.getcwd() + "/" + opts['-o']
+output_directory = os.getcwd() + "/wsj"
 
 if not os.path.exists(output_directory):
     os.makedirs(output_directory)
@@ -56,7 +52,7 @@ with open(opts['-s']) as scp_file:
 head = "wav_filename,wav_filesize,transcript\n"
 punctuations = r"""!"#$%&()*+,-./:;<=>?@[\]^_`{|}~"""
 
-train_csv = open(opts['-o'] + "-train.csv", "w+")
+train_csv = open("wsj-train.csv", "w+")
 train_csv.write(head)
 
 brackets = re.compile(r'<.+>')
