@@ -150,12 +150,12 @@ def format_csv(arg):
         start_position = str(ns_to_ms(time[0]))
         end_position = ns_to_ms(time[1]) if ns_to_ms(time[1]) < length else length
         end_position = "=" + str(end_position)
-        subprocess.run(["sox", "-v", "0.75", input_file,
-                        "-e", "signed-integer", "-r", "16000", output_file,
+        subprocess.run(["sox", input_file, "-e", "signed-integer",
+                        "-r", "16000", output_file,
                         "trim", start_position, end_position])
 
         text = line[23:]
-        text = text.replace("&", " and ")
+        text = text.replace("&", " and")
 
     else:
         text = line[8:]
