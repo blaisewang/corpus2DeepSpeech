@@ -138,11 +138,9 @@ def format_csv(arg):
     line, index, output_directory = arg
 
     if mode == mode.SWB:
-        prefix = line[0:23]
-        prefix = prefix.split("_")
-        time = prefix[1].split("-")
+        time = line[10:23].split("-")
 
-        input_file = "wav/" + prefix[0] + ".wav"
+        input_file = "wav/" + line[0:9] + ".wav"
         output_file = output_directory + "/{0:06d}".format(index) + ".wav"
 
         length = float(subprocess.check_output(['soxi', '-D', input_file], stderr=subprocess.STDOUT))
