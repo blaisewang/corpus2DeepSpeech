@@ -16,6 +16,8 @@ import subprocess
 import sys
 from enum import Enum
 
+SAMPLE_RATE = 16000
+
 opts, args = getopt.getopt(sys.argv[1:], 'ht:e:d:m:')
 opts = dict(opts)
 
@@ -158,9 +160,8 @@ def format_csv(arg):
         start_position = str(ns_to_ms(time[0]))
         end_position = ns_to_ms(time[1]) if ns_to_ms(time[1]) < length else length
         end_position = "=" + str(end_position)
-        subprocess.run(["sox", input_file, "-e", "signed-integer",
-                        "-r", "16000", output_file,
-                        "trim", start_position, end_position])
+        subprocess.run(["sox", input_file, "-e", "signed-integer", "-r", "16000",
+                        output_file, "trim", start_position, end_position])
 
         text = line[23:]
         text = brackets.sub('', text)
@@ -179,8 +180,7 @@ def format_csv(arg):
         end_position = ns_to_ms(time[1]) if ns_to_ms(time[1]) < length else length
         end_position = "=" + str(end_position)
 
-        subprocess.run(["sox", input_file, output_file,
-                        "trim", start_position, end_position])
+        subprocess.run(["sox", input_file, output_file, "trim", start_position, end_position])
 
         text = line[39:]
 
@@ -218,11 +218,11 @@ def format_csv(arg):
 
     frames = int(subprocess.check_output(['soxi', '-s', output_file], stderr=subprocess.STDOUT))
 
-    if len(text) < 4:
+    if len(text) < 3:
         return
-    if frames / 16000 > 10:
+    if frames / SAMPLE_RATE > 10:
         return
-    if int(frames / 16000 * 1000 / 10 / 2) < len(text):
+    if int(frames / SAMPLE_RATE * 1000 / 10 / 2) < len(text):
         return
 
     return output_file + "," + str(os.path.getsize(output_file)) + "," + text + "\n"
