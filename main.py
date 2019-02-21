@@ -80,8 +80,8 @@ punctuations = r"""!"#$%&()*+,-./:;<=>?@[\]^_`{|}~"""
 punctuation = re.compile('[%s]' % re.escape(punctuations))
 
 
-def ns_to_ms(time_point):
-    return int(time_point) / 100
+def ns_to_ms(ns_time):
+    return int(ns_time) / 100
 
 
 def mkdir(directory_path):
@@ -92,31 +92,38 @@ def mkdir(directory_path):
 for directory in output_directories:
     mkdir(directory)
 
-if mode == mode.SWB:
+if mode != mode.WSJ:
     mkdir(current_directory + "/wav")
 
 
 def scp_file_read(arg):
     path, output = arg
 
-    sox_args_list = []
+    sub_process_arg_list = []
 
     if mode == Mode.SWB:
 
         with open(path + "/wav.scp") as scp_file:
-            for index, line in enumerate(scp_file):
+            for line in scp_file:
                 scp = line.split()
                 output_file = "wav/" + scp[0] + ".wav"
-                sox_args_list.append([scp[1], scp[2], scp[3], scp[4], scp[5], scp[6], scp[7], output_file])
+                sub_process_arg_list.append([scp[1], scp[2], scp[3], scp[4], scp[5], scp[6], scp[7], output_file])
 
-    else:
+    elif mode == Mode.WSJ:
         with open(path + "/wav.scp") as scp_file:
             for index, line in enumerate(scp_file):
                 scp = line.split()
                 output_file = output + "/{0:06d}".format(index) + ".wav"
-                sox_args_list.append([scp[1], scp[2], scp[3], scp[4], output_file])
+                sub_process_arg_list.append([scp[1], scp[2], scp[3], scp[4], output_file])
 
-    return sox_args_list
+    elif mode == Mode.AMI:
+        with open(path + "/wav.scp") as scp_file:
+            for line in scp_file:
+                scp = line.split()
+                output_file = "wav/" + scp[0] + ".wav"
+                sub_process_arg_list.append(["cp", scp[8], output_file])
+
+    return sub_process_arg_list
 
 
 def convert(arg):
@@ -135,9 +142,12 @@ def text_read(arg):
 
 
 def format_csv(arg):
+    text = ""
+    output_file = ""
     line, index, output_directory = arg
 
     if mode == mode.SWB:
+
         time = line[10:23].split("-")
 
         input_file = "wav/" + line[0:9] + ".wav"
@@ -155,7 +165,26 @@ def format_csv(arg):
         text = line[23:]
         text = text.replace("&", " and")
 
-    else:
+    elif mode == mode.AMI:
+
+        time = line[23:38].split("_")
+        input_file = "wav/" + line[0:15] + ".wav"
+
+        output_file = output_directory + "/{0:06d}".format(index) + ".wav"
+
+        length = float(subprocess.check_output(['soxi', '-D', input_file], stderr=subprocess.STDOUT))
+
+        start_position = str(ns_to_ms(time[0]))
+        end_position = ns_to_ms(time[1]) if ns_to_ms(time[1]) < length else length
+        end_position = "=" + str(end_position)
+
+        subprocess.run(["sox", input_file, output_file,
+                        "trim", start_position, end_position])
+
+        text = line[39:]
+
+    elif mode == mode.WSJ:
+
         text = line[8:]
 
         text = text.replace("-DASH", "")
