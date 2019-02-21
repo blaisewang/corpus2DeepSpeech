@@ -163,6 +163,7 @@ def format_csv(arg):
                         "trim", start_position, end_position])
 
         text = line[23:]
+        text = brackets.sub('', text)
         text = text.replace("&", " and")
 
     elif mode == mode.AMI:
@@ -204,13 +205,13 @@ def format_csv(arg):
         text = text.replace("?QUESTION-MARK", "")
         text = text.replace("!EXCLAMATION-POINT", "")
 
+        text = brackets.sub('', text)
         text = text.replace("&AMPERSAND", "and")
 
         output_file = output_directory + "/{0:06d}".format(index) + ".wav"
 
     text = text.lower()
 
-    text = brackets.sub('', text)
     text = punctuation.sub('', text)
     text = text.replace("  ", " ")
     text = text.strip()
