@@ -169,7 +169,8 @@ def format_csv(arg):
 
     elif mode == mode.AMI:
 
-        time = line[23:38].split("_")
+        time = line.split()[0]
+        time = time[-15:].split("_")
         input_file = "wav/" + line[0:15] + ".wav"
 
         output_file = output_directory + "/{0:06d}".format(index) + ".wav"
