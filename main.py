@@ -183,7 +183,7 @@ def format_csv(arg):
 
         subprocess.run(["sox", input_file, output_file, "trim", start_position, end_position])
 
-        text = line[39:]
+        text = line.replace(line.split()[0], "").strip()
 
     elif mode == mode.WSJ:
 
