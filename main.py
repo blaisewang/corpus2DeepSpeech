@@ -73,7 +73,7 @@ output_directories = [current_directory + "/" + mode_value + "-train",
                       current_directory + "/" + mode_value + "-dev"]
 
 if mode == Mode.SWB:
-    brackets = re.compile(r'[.+]')
+    brackets = re.compile(r'\[.+\]')
 else:
     brackets = re.compile(r'<.+>')
 
