@@ -166,6 +166,8 @@ def format_csv(arg):
         text = line[23:]
         text = brackets.sub('', text)
 
+        text = " " + text + " "
+
         text = re.sub(r' (\d+)(000)(S|ST|ND|RD|TH|)', r' \1 THOUSAND\3 ', text)  # RN 2012-02-20 edited this line
         text = re.sub(r' (\d+)0(\d\d)(S|ST|ND|RD|TH|)', r' \1 THOUSAND AND \2\3 ',
                       text)  # RN 2012-02-20 edited this line
