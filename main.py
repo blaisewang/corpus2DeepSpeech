@@ -165,6 +165,102 @@ def format_csv(arg):
 
         text = line[23:]
         text = brackets.sub('', text)
+
+        text = re.sub(r' (\d+)(000)(S|ST|ND|RD|TH|)', r' \1 THOUSAND\3 ', text)  # RN 2012-02-20 edited this line
+        text = re.sub(r' (\d+)0(\d\d)(S|ST|ND|RD|TH|)', r' \1 THOUSAND AND \2\3 ',
+                      text)  # RN 2012-02-20 edited this line
+        text = re.sub(r' (\d+)(\d\d\d)(S|ST|ND|RD|TH|)', r' \1 THOUSAND \2\3 ', text)  # RN 2012-02-20 edited this line
+
+        text = re.sub(r' (\d)(00)(S|ST|ND|RD|TH|)', r' \1 HUNDRED\3 ', text)  # RN 2012-02-20 edited this line
+        text = re.sub(r' (\d)(\d\d)(S|ST|ND|RD|TH|)', r' \1 HUNDRED AND \2\3 ', text)  # RN 2012-02-20 edited this line
+
+        text = re.sub(r' 11(S|ST|ND|RD|TH|)', r' ELEVEN\1 ', text)  # RN 2012-02-20 edited this line
+        text = re.sub(r' 12(S|ST|ND|RD|TH|) ', r' TWELVE\1 ', text)  # RN 2012-02-20 edited this line
+        text = re.sub(r' 13(S|ST|ND|RD|TH|) ', r' THIRTEEN\1 ', text)  # RN 2012-02-20 edited this line
+        text = re.sub(r' 14(S|ST|ND|RD|TH|) ', r' FOURTEEN\1 ', text)  # RN 2012-02-20 edited this line
+        text = re.sub(r' 15(S|ST|ND|RD|TH|) ', r' FIFTEEN\1 ', text)  # RN 2012-02-20 edited this line
+        text = re.sub(r' 16(S|ST|ND|RD|TH|) ', r' SIXTEEN\1 ', text)  # RN 2012-02-20 edited this line
+        text = re.sub(r' 17(S|ST|ND|RD|TH|) ', r' SEVENTEEN\1 ', text)  # RN 2012-02-20 edited this line
+        text = re.sub(r' 18(S|ST|ND|RD|TH|) ', r' EIGHTEEN\1 ', text)  # RN 2012-02-20 edited this line
+        text = re.sub(r' 19(S|ST|ND|RD|TH|) ', r' NINETEEN\1 ', text)  # RN 2012-02-20 edited this line
+
+        text = re.sub(r' 10 ', r' TEN ', text)
+        text = re.sub(r' 20 ', r' TWENTY ', text)
+        text = re.sub(r' 30 ', r' THIRTY ', text)
+        text = re.sub(r' 40 ', r' FOURTY ', text)
+        text = re.sub(r' 50 ', r' FIFTY ', text)
+        text = re.sub(r' 60 ', r' SIXTY ', text)
+        text = re.sub(r' 70 ', r' SEVENTY ', text)
+        text = re.sub(r' 80 ', r' EIGHTY ', text)
+        text = re.sub(r' 90 ', r' NINETY ', text)
+
+        text = re.sub(r' 11 ', r' ELEVEN ', text)
+        text = re.sub(r' 12 ', r' TWELVE ', text)
+        text = re.sub(r' 11 ', r' THIRTEEN ', text)
+        text = re.sub(r' 11 ', r' FOURTEEN ', text)
+        text = re.sub(r' 11 ', r' FIFTEEN ', text)
+        text = re.sub(r' 11 ', r' SIXTEEN ', text)
+        text = re.sub(r' 11 ', r' SEVENTEEN ', text)
+        text = re.sub(r' 11 ', r' EIGHTEEN ', text)
+        text = re.sub(r' 11 ', r' NINETEEN ', text)
+        text = re.sub(r' 11 ', r' TWENTY ', text)
+
+        text = re.sub(r' 20S ', r' TWENTIES ', text)  # RN 2012-02-20 edited this line
+        text = re.sub(r' 30S ', r' THIRTIES ', text)  # RN 2012-02-20 edited this line
+        text = re.sub(r' 40S ', r' FOURTIES ', text)  # RN 2012-02-20 edited this line
+        text = re.sub(r' 50S ', r' FIFTIES ', text)  # RN 2012-02-20 edited this line
+        text = re.sub(r' 60S ', r' SIXTIES ', text)  # RN 2012-02-20 edited this line
+        text = re.sub(r' 70S ', r' SEVENTIES ', text)  # RN 2012-02-20 edited this line
+        text = re.sub(r' 80S ', r' EIGHTIES ', text)  # RN 2012-02-20 edited this line
+        text = re.sub(r' 90S ', r' NINETIES ', text)  # RN 2012-02-20 edited this line
+
+        text = re.sub(r' 20TH ', r' TWENTIETH ', text)
+        text = re.sub(r' 30TH ', r' THIRTITH ', text)
+        text = re.sub(r' 40TH ', r' FOURTIETH ', text)
+        text = re.sub(r' 50TH ', r' FIFTIETH ', text)
+        text = re.sub(r' 60TH ', r' SIXTIETH ', text)
+        text = re.sub(r' 70TH ', r' SEVENTIETH ', text)
+        text = re.sub(r' 80TH ', r' EIGHTIETH ', text)
+        text = re.sub(r' 90TH ', r' NINETIETH ', text)
+
+        text = re.sub(r' 2(\d)(S|ST|ND|RD|TH|) ', r' TWENTY \1\2 ', text)  # RN 2012-02-20 edited this line
+        text = re.sub(r' 3(\d)(S|ST|ND|RD|TH|) ', r' THIRTY \1\2 ', text)  # RN 2012-02-20 edited this line
+        text = re.sub(r' 4(\d)(S|ST|ND|RD|TH|) ', r' FOURTY \1\2 ', text)  # RN 2012-02-20 edited this line
+        text = re.sub(r' 5(\d)(S|ST|ND|RD|TH|) ', r' FIFTY \1\2 ', text)  # RN 2012-02-20 edited this line
+        text = re.sub(r' 6(\d)(S|ST|ND|RD|TH|) ', r' SIXTY \1\2 ', text)  # RN 2012-02-20 edited this line
+        text = re.sub(r' 7(\d)(S|ST|ND|RD|TH|) ', r' SEVENTY \1\2 ', text)  # RN 2012-02-20 edited this line
+        text = re.sub(r' 8(\d)(S|ST|ND|RD|TH|) ', r' EIGHTY \1\2 ', text)  # RN 2012-02-20 edited this line
+        text = re.sub(r' 9(\d)(S|ST|ND|RD|TH|) ', r' NINETY \1\2 ', text)  # RN 2012-02-20 edited this line
+
+        text = re.sub(r' 0(\d)(ST|ND|RD|TH|) ', r' \1\2 ', text)
+
+        text = re.sub(r' 1ST ', r' FIRST ', text)
+        text = re.sub(r' 2ND ', r' SECOND ', text)
+        text = re.sub(r' 3RD ', r' THIRD ', text)
+        text = re.sub(r' 4TH ', r' FOURTH ', text)
+        text = re.sub(r' 5TH ', r' FIFTH ', text)
+        text = re.sub(r' 6TH ', r' SIXTH ', text)
+        text = re.sub(r' 7TH ', r' SEVENTH ', text)
+        text = re.sub(r' 8TH ', r' EIGHTH ', text)
+        text = re.sub(r' 9TH ', r' NINTH ', text)
+        text = re.sub(r' 10TH ', r' TENTH ', text)
+
+        text = re.sub(r' 1 ', r' ONE ', text)
+        text = re.sub(r' 2(S|) ', r' TWO\1 ', text)  # RN 2012-02-20 edited this line
+        text = re.sub(r' 3(S|) ', r' THREE\1 ', text)  # RN 2012-02-20 edited this line
+        text = re.sub(r' 4(S|) ', r' FOUR\1 ', text)  # RN 2012-02-20 edited this line
+        text = re.sub(r' 5(S|) ', r' FIVE\1 ', text)  # RN 2012-02-20 edited this line
+        text = re.sub(r' 6(S|) ', r' SIX\1 ', text)  # RN 2012-02-20 edited this line
+        text = re.sub(r' 7(S|) ', r' SEVEN\1 ', text)  # RN 2012-02-20 edited this line
+        text = re.sub(r' 8(S|) ', r' EIGHT\1 ', text)  # RN 2012-02-20 edited this line
+        text = re.sub(r' 9(S|) ', r' NINE\1 ', text)  # RN 2012-02-20 edited this line
+
+        text = re.sub(r' 1/2 ', r' A HALF', text)
+        text = re.sub(r' 1/3 ', r' A THIRD ', text)
+        text = re.sub(r' 1/4 ', r' A QUARTER ', text)
+
+        text = re.sub(r'0', r' ZERO ', text)
+
         text = text.replace("&", " and")
 
     elif mode == mode.AMI:
